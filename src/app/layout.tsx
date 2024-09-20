@@ -15,11 +15,8 @@ import { MotionLazy } from 'src/components/animate/motion-lazy';
 import SnackbarProvider from 'src/components/snackbar/snackbar-provider';
 import { SettingsDrawer, SettingsProvider } from 'src/components/settings';
 
-import { DynamicWidget, DynamicContextProvider } from '@dynamic-labs/sdk-react-core';
-import { EthereumWalletConnectors } from '@dynamic-labs/ethereum';
-
 import { AuthProvider } from 'src/auth/context/jwt';
-import { DYNAMIC_ENV_ID } from 'src/config-global';
+import DynamicProvider from 'src/libs/dynamic/DynamicProvider';
 // import { AuthProvider } from 'src/auth/context/auth0';
 // import { AuthProvider } from 'src/auth/context/amplify';
 // import { AuthProvider } from 'src/auth/context/firebase';
@@ -52,19 +49,11 @@ type Props = {
   children: React.ReactNode;
 };
 
-console.log(DYNAMIC_ENV_ID);
-
 export default function RootLayout({ children }: Props) {
   return (
     <html lang="en" className={primaryFont.className}>
       <body>
-        <DynamicContextProvider
-          settings={{
-            environmentId: DYNAMIC_ENV_ID!,
-            walletConnectors: [EthereumWalletConnectors],
-          }}
-        >
-          <DynamicWidget />
+        <DynamicProvider>
           <AuthProvider>
             <LocalizationProvider>
               <SettingsProvider
@@ -89,7 +78,7 @@ export default function RootLayout({ children }: Props) {
               </SettingsProvider>
             </LocalizationProvider>
           </AuthProvider>
-        </DynamicContextProvider>
+        </DynamicProvider>
       </body>
     </html>
   );

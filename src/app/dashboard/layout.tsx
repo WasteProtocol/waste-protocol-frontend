@@ -1,7 +1,7 @@
 'use client';
 
-import { GuestGuard } from 'src/auth/guard';
-import AuthClassicLayout from 'src/layouts/auth/classic';
+import { AuthGuard } from 'src/auth/guard';
+import DashboardLayout from 'src/layouts/dashboard';
 
 // ----------------------------------------------------------------------
 
@@ -11,8 +11,8 @@ type Props = {
 
 export default function Layout({ children }: Props) {
   return (
-    <GuestGuard>
-      <AuthClassicLayout>{children}</AuthClassicLayout>
-    </GuestGuard>
+    <AuthGuard>
+      <DashboardLayout>{children}</DashboardLayout>
+    </AuthGuard>
   );
 }
