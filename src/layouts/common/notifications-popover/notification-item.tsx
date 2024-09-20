@@ -10,7 +10,6 @@ import ListItemButton from '@mui/material/ListItemButton';
 import { fToNow } from 'src/utils/format-time';
 
 import Label from 'src/components/label';
-import FileThumbnail from 'src/components/file-thumbnail';
 
 // ----------------------------------------------------------------------
 
@@ -144,11 +143,6 @@ export default function NotificationItem({ notification }: NotificationItemProps
         bgcolor: 'background.neutral',
       }}
     >
-      <FileThumbnail
-        file="http://localhost:8080/httpsdesign-suriname-2015.mp3"
-        sx={{ width: 40, height: 40 }}
-      />
-
       <Stack spacing={1} direction={{ xs: 'column', sm: 'row' }} flexGrow={1} sx={{ minWidth: 0 }}>
         <ListItemText
           disableTypography

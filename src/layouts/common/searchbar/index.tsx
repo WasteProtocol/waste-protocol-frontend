@@ -20,7 +20,6 @@ import { useEventListener } from 'src/hooks/use-event-listener';
 import Label from 'src/components/label';
 import Iconify from 'src/components/iconify';
 import Scrollbar from 'src/components/scrollbar';
-import SearchNotFound from 'src/components/search-not-found';
 
 import ResultItem from './result-item';
 import { useNavData } from '../../dashboard/config-navigation';
@@ -161,7 +160,7 @@ function Searchbar() {
         </Box>
 
         <Scrollbar sx={{ p: 3, pt: 2, height: 400 }}>
-          {notFound ? <SearchNotFound query={searchQuery} sx={{ py: 10 }} /> : renderItems()}
+          {notFound ? <>Not Found</> : renderItems()}
         </Scrollbar>
       </Dialog>
     </>

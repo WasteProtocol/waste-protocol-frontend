@@ -7,7 +7,9 @@ import {
   DynamicEmbeddedWidget,
 } from '@dynamic-labs/sdk-react-core';
 
+import Box from '@mui/system/Box';
 import Alert from '@mui/material/Alert';
+import CircularProgress from '@mui/material/CircularProgress';
 
 import { useRouter, useSearchParams } from 'src/routes/hooks';
 
@@ -18,12 +20,9 @@ import { PATH_AFTER_LOGIN } from 'src/config-global';
 
 export default function JwtLoginView() {
   const { login } = useAuthContext();
-  const { user, primaryWallet } = useDynamicContext();
+  const { primaryWallet } = useDynamicContext();
 
   const isLoggedIn = useIsLoggedIn();
-
-  console.log({ isLoggedIn });
-  console.log(user);
 
   const router = useRouter();
 
@@ -46,8 +45,6 @@ export default function JwtLoginView() {
 
   const signMessage = async () => {
     if (!primaryWallet) return;
-
-    console.log({ primaryWallet });
 
     const signature = await primaryWallet.signMessage('msg from backend');
 
@@ -72,8 +69,13 @@ export default function JwtLoginView() {
           {errorMsg}
         </Alert>
       )}
-
-      <DynamicEmbeddedWidget />
+      {!isLoggedIn ? (
+        <DynamicEmbeddedWidget />
+      ) : (
+        <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+          <CircularProgress />
+        </Box>
+      )}
     </>
   );
 }

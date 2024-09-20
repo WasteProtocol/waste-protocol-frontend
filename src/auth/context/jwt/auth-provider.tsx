@@ -1,6 +1,7 @@
 'use client';
 
 import { useMemo, useEffect, useReducer, useCallback } from 'react';
+import { useIsLoggedIn, useDynamicContext } from '@dynamic-labs/sdk-react-core';
 
 import axios, { endpoints } from 'src/utils/axios';
 
@@ -83,12 +84,17 @@ type Props = {
 
 export function AuthProvider({ children }: Props) {
   const [state, dispatch] = useReducer(reducer, initialState);
+  const { handleLogOut } = useDynamicContext();
+
+  const isLoggedIn = useIsLoggedIn();
 
   const initialize = useCallback(async () => {
     try {
       const accessToken = sessionStorage.getItem(STORAGE_KEY);
 
-      if (accessToken && isValidToken(accessToken)) {
+      const validToken = !!accessToken && isValidToken(accessToken);
+
+      if (validToken && isLoggedIn) {
         setSession(accessToken);
 
         const res = await axios.get(endpoints.auth.me);
@@ -105,6 +111,7 @@ export function AuthProvider({ children }: Props) {
           },
         });
       } else {
+        logout();
         dispatch({
           type: Types.INITIAL,
           payload: {
@@ -121,11 +128,20 @@ export function AuthProvider({ children }: Props) {
         },
       });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
     initialize();
   }, [initialize]);
+
+  useEffect(() => {
+    if (state.user && !isLoggedIn) {
+      logout();
+      window.location.reload();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isLoggedIn]);
 
   // LOGIN
   const login = useCallback(async (email: string, password: string) => {
@@ -182,11 +198,14 @@ export function AuthProvider({ children }: Props) {
 
   // LOGOUT
   const logout = useCallback(async () => {
+    if (isLoggedIn) {
+      await handleLogOut();
+    }
     setSession(null);
     dispatch({
       type: Types.LOGOUT,
     });
-  }, []);
+  }, [handleLogOut, isLoggedIn]);
 
   // ----------------------------------------------------------------------
 

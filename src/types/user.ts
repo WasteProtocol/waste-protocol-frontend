@@ -1,5 +1,3 @@
-import { CustomFile } from 'src/components/upload';
-
 // ----------------------------------------------------------------------
 
 export type IUserTableFilterValue = string | string[];
@@ -120,7 +118,7 @@ export type IUserAccount = {
   address: string | null;
   zipCode: string | null;
   phoneNumber: string | null;
-  photoURL: CustomFile | string | null;
+  photoURL: any | string | null;
 };
 
 export type IUserAccountBillingHistory = {
