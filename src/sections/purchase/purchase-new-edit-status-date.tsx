@@ -6,7 +6,7 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 
 import { RHFSelect } from 'src/components/hook-form';
 
-const locations = ['New York', 'San Francisco', 'Los Angeles', 'Chicago', 'Seattle'];
+const locations = ['Community 1', 'Community 2', 'Community 3', 'Community 4', 'Community 5'];
 const purposes = ['Deposit', 'Sell', 'Donate'];
 
 export default function InvoiceNewEditStatusDate() {
