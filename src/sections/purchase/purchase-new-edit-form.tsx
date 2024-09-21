@@ -36,7 +36,7 @@ export default function PurchaseNewEditForm() {
 
   useEffect(() => {
     (async () => {
-      const { data } = await axios.get(`${HOST_API}/waste-categories`);
+      const { data } = await axios.get(`${HOST_API}/waste-items`);
       console.log(data);
       setWasteCategories(data.results);
       init.onFalse();
@@ -116,7 +116,7 @@ export default function PurchaseNewEditForm() {
         <LoadingButton
           size="large"
           variant="contained"
-          loading={loadingSend.value && isSubmitting}
+          loading={isSubmitting}
           onClick={handleCreateAndSend}
         >
           Create

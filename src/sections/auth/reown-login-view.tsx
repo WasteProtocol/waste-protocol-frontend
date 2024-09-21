@@ -21,7 +21,7 @@ import { HOST_API, PATH_AFTER_LOGIN } from 'src/config-global';
 // ----------------------------------------------------------------------
 
 export default function JwtLoginView() {
-  const { login } = useAuthContext();
+  const { login, authenticated } = useAuthContext();
   const { open } = useAppKit();
 
   const { isConnected, address } = useAccount();
@@ -36,7 +36,7 @@ export default function JwtLoginView() {
 
   useEffect(() => {
     (async () => {
-      if (isConnected) {
+      if (isConnected && !authenticated) {
         await onSubmit();
       }
     })();

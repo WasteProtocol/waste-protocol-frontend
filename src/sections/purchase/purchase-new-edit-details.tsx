@@ -7,15 +7,13 @@ import Divider from '@mui/material/Divider';
 import MenuItem from '@mui/material/MenuItem';
 import Typography from '@mui/material/Typography';
 
-import { fNumber } from 'src/utils/format-number';
-
 import Iconify from 'src/components/iconify';
 import { RHFSelect, RHFTextField } from 'src/components/hook-form';
 
 // ----------------------------------------------------------------------
 
 type Props = {
-  categories: { name: string; id: string; emissionRate: number }[];
+  categories: { name: string; id: string; price: number }[];
 };
 
 export default function InvoiceNewEditDetails({ categories }: Props) {
@@ -29,7 +27,7 @@ export default function InvoiceNewEditDetails({ categories }: Props) {
   const values = watch();
 
   const emissionRate = (index: number) =>
-    categories.find((category) => category.id === values.items[index].wasteItemId)?.emissionRate;
+    categories.find((category) => category.id === values.items[index].wasteItemId)?.price;
 
   // const totalOnRow = values.items.map((item: IInvoiceItem) => item.quantity * item.price);
 
@@ -52,40 +50,40 @@ export default function InvoiceNewEditDetails({ categories }: Props) {
     remove(index);
   };
 
-  const renderTotal = (
-    <Stack
-      spacing={2}
-      alignItems="flex-end"
-      sx={{ mt: 3, textAlign: 'right', typography: 'body2' }}
-    >
-      <Stack direction="row">
-        <Box sx={{ color: 'text.secondary' }}>Points earned</Box>
-        <Box sx={{ width: 160 }}>{fNumber(234)}</Box>
-      </Stack>
+  // const renderTotal = (
+  //   <Stack
+  //     spacing={2}
+  //     alignItems="flex-end"
+  //     sx={{ mt: 3, textAlign: 'right', typography: 'body2' }}
+  //   >
+  //     <Stack direction="row">
+  //       <Box sx={{ color: 'text.secondary' }}>Points earned</Box>
+  //       <Box sx={{ width: 160 }}>{fNumber(234)}</Box>
+  //     </Stack>
 
-      <Stack direction="row">
-        <Box sx={{ color: 'text.secondary' }}>Coin Reward</Box>
-        <Box
-          sx={{
-            width: 160,
-          }}
-        >
-          USDC
-        </Box>
-      </Stack>
+  //     <Stack direction="row">
+  //       <Box sx={{ color: 'text.secondary' }}>Coin Reward</Box>
+  //       <Box
+  //         sx={{
+  //           width: 160,
+  //         }}
+  //       >
+  //         USDC
+  //       </Box>
+  //     </Stack>
 
-      <Stack direction="row">
-        <Box sx={{ color: 'text.secondary' }}>Coins received</Box>
-        <Box
-          sx={{
-            width: 160,
-          }}
-        >
-          {values.discount ? `- ${fNumber(1234)}` : '-'}
-        </Box>
-      </Stack>
-    </Stack>
-  );
+  //     <Stack direction="row">
+  //       <Box sx={{ color: 'text.secondary' }}>Coins received</Box>
+  //       <Box
+  //         sx={{
+  //           width: 160,
+  //         }}
+  //       >
+  //         {values.discount ? `- ${fNumber(1234)}` : '-'}
+  //       </Box>
+  //     </Stack>
+  //   </Stack>
+  // );
 
   return (
     <Box sx={{ p: 3 }}>
@@ -164,7 +162,7 @@ export default function InvoiceNewEditDetails({ categories }: Props) {
         </Button>
       </Stack>
 
-      {renderTotal}
+      {/* {renderTotal} */}
     </Box>
   );
 }

@@ -36,12 +36,6 @@ export default function JwtLoginView() {
 
   const returnTo = searchParams.get('returnTo');
 
-  // useEffect(() => {
-  //   if (isConnected) {
-  //     disconnect();
-  //   }
-  // }, []);
-
   useEffect(() => {
     (async () => {
       if (isLoggedIn && !authenticated) {
