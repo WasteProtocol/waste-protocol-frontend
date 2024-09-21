@@ -48,7 +48,7 @@ export default function ApproveView() {
   const [tableData, setTableData] = useState<[]>([]);
 
   const forceReload = useBoolean();
-
+  const approve = useBoolean();
   const notFound = !tableData.length;
 
   useEffect(() => {
@@ -62,6 +62,18 @@ export default function ApproveView() {
   }, [forceReload.value]);
 
   if (init.value) return <div>Loading...</div>;
+
+  const onApproveRow = async (tradeId: number) => {
+    try {
+      approve.onTrue();
+
+      await axios.get(`${HOST_API}/trades/approve/${tradeId}`);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      approve.onFalse();
+    }
+  };
 
   return (
     <Container>
@@ -87,7 +99,7 @@ export default function ApproveView() {
 
               <TableBody>
                 {tableData.map((row: any) => (
-                  <ApproveTableRow key={row.id} row={row} onApproveSuccess={forceReload.onToggle} />
+                  <ApproveTableRow key={row.id} row={row} onApproveRow={onApproveRow} />
                 ))}
 
                 <TableEmptyRows

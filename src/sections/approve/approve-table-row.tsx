@@ -7,12 +7,10 @@ import { Button, IconButton } from '@mui/material';
 
 import { useBoolean } from 'src/hooks/use-boolean';
 
-import axios from 'src/utils/axios';
 import { fDate } from 'src/utils/format-time';
 import { fNumber } from 'src/utils/format-number';
 
 import { verify } from 'src/actions/verify';
-import { HOST_API } from 'src/config-global';
 
 import Label from 'src/components/label';
 import Iconify from 'src/components/iconify';
@@ -22,10 +20,10 @@ import { ConfirmDialog } from 'src/components/custom-dialog';
 
 type Props = {
   row: any;
-  onApproveSuccess: () => void;
+  onApproveRow: (tradeId: number) => void;
 };
 
-export default function ApproveTableRow({ row, onApproveSuccess }: Props) {
+export default function ApproveTableRow({ row, onApproveRow }: Props) {
   const app_id = process.env.NEXT_PUBLIC_WLD_APP_ID as `app_${string}`;
   const action = process.env.NEXT_PUBLIC_WLD_ACTION;
 
@@ -39,7 +37,6 @@ export default function ApproveTableRow({ row, onApproveSuccess }: Props) {
   const { setOpen } = useIDKit();
 
   const confirm = useBoolean();
-  const approve = useBoolean();
 
   const {
     tradeId,
@@ -52,22 +49,10 @@ export default function ApproveTableRow({ row, onApproveSuccess }: Props) {
     totalUSDCReceived,
   } = row;
 
-  const onApproveRow = async () => {
-    try {
-      approve.onTrue();
-      await axios.get(`${HOST_API}/trades/approve/${tradeId}`);
-      onApproveSuccess();
-    } catch (error) {
-      console.log(error);
-    } finally {
-      approve.onFalse();
-    }
-  };
-
   const onSuccess = (result: ISuccessResult) => {
     // This is where you should perform frontend actions once a user has been verified, such as redirecting to a new page
     console.log(result.nullifier_hash);
-    onApproveRow();
+    // onApproveRow();
   };
 
   const handleProof = async (result: ISuccessResult) => {
@@ -121,7 +106,12 @@ export default function ApproveTableRow({ row, onApproveSuccess }: Props) {
 
         <TableCell align="center" sx={{ px: 1, whiteSpace: 'nowrap' }}>
           {status === 'Pending' && (
-            <IconButton onClick={confirm.onTrue}>
+            <IconButton
+              onClick={() => {
+                console.log({ tradeId });
+                confirm.onTrue();
+              }}
+            >
               <Iconify icon="eva:more-vertical-fill" />
             </IconButton>
           )}
@@ -137,8 +127,10 @@ export default function ApproveTableRow({ row, onApproveSuccess }: Props) {
           <Button
             variant="contained"
             color="success"
-            onClick={() => setOpen(true)}
-            disabled={approve.value}
+            onClick={() => {
+              // onApproveRow();
+              confirm.onFalse();
+            }}
           >
             Approve
           </Button>

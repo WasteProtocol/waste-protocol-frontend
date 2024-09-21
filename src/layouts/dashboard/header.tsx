@@ -20,7 +20,6 @@ import SvgColor from 'src/components/svg-color';
 import { useSettingsContext } from 'src/components/settings';
 
 import { NAV, HEADER } from '../config-layout';
-import SettingsButton from '../common/settings-button';
 
 // ----------------------------------------------------------------------
 
@@ -63,7 +62,7 @@ export default function Header({ onOpenNav }: Props) {
         justifyContent="flex-end"
         spacing={{ xs: 0.5, sm: 1 }}
       >
-        <SettingsButton />
+        {/* <SettingsButton /> */}
         <Avatar src={`../assets/avatars/${avatarNum}.svg`} />
         {isConnected && (
           <>

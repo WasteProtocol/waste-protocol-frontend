@@ -10,12 +10,15 @@ import Typography from '@mui/material/Typography';
 import MainLayout from 'src/layouts/main';
 
 import ScrollProgress from 'src/components/scroll-progress';
+
+import AppCurrentDownload from '../app-current-download';
+import EcommerceYearlySales from '../ecommerce-yearly-sales';
+import EcommerceWidgetSummary from '../ecommerce-widget-summary';
 // ----------------------------------------------------------------------
 
 export default function OverviewEcommerceView() {
   // const { user } = useMockedUser();
   const { scrollYProgress } = useScroll();
-  // const theme = useTheme();
 
   return (
     <MainLayout>
@@ -42,6 +45,84 @@ export default function OverviewEcommerceView() {
             <Box sx={{ pt: 16 }}>
               <img src="assets/hero/glob.png" alt="glob" />
             </Box>
+          </Grid>
+        </Grid>
+
+        <Grid container spacing={3} sx={{ mt: 6 }}>
+          <Grid xs={12} md={6} lg={4}>
+            <AppCurrentDownload
+              title="Amount of waste collected"
+              chart={{
+                series: [
+                  { label: 'Paper', value: 12244 },
+                  { label: 'Paper', value: 53345 },
+                  { label: 'Paper', value: 44313 },
+                  { label: 'Paper', value: 78343 },
+                ],
+              }}
+            />
+          </Grid>
+
+          <Grid xs={12} md={6} lg={8}>
+            <EcommerceYearlySales
+              title="Monthly classification"
+              subheader=""
+              chart={{
+                categories: [
+                  'Jan',
+                  'Feb',
+                  'Mar',
+                  'Apr',
+                  'May',
+                  'Jun',
+                  'Jul',
+                  'Aug',
+                  'Sep',
+                  'Oct',
+                  'Nov',
+                  'Dec',
+                ],
+                series: [
+                  {
+                    year: '2019',
+                    data: [
+                      {
+                        name: 'Kg.',
+                        data: [10, 41, 35, 51, 49, 62, 69, 91, 148, 35, 51, 49],
+                      },
+                    ],
+                  },
+                ],
+              }}
+            />
+          </Grid>
+
+          <Grid xs={12} md={6} lg={4}>
+            <AppCurrentDownload
+              title="Separated by type"
+              chart={{
+                series: [
+                  { label: 'Paper', value: 12244 },
+                  { label: 'Paper', value: 53345 },
+                  { label: 'Paper', value: 44313 },
+                  { label: 'Paper', value: 78343 },
+                ],
+              }}
+            />
+          </Grid>
+
+          <Grid xs={12} md={6} lg={4}>
+            <Grid xs={12}>
+              <EcommerceWidgetSummary title="Product Sold" total={765} />
+            </Grid>
+
+            <Grid xs={12} sx={{ mt: 2 }}>
+              <EcommerceWidgetSummary title="Total Balance" total={18765} />
+            </Grid>
+
+            <Grid xs={12} sx={{ mt: 2 }}>
+              <EcommerceWidgetSummary title="Sales Profit" total={4876} />
+            </Grid>
           </Grid>
         </Grid>
       </Container>
