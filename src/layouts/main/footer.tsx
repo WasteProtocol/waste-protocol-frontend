@@ -2,11 +2,11 @@ import Box from '@mui/material/Box';
 import Link from '@mui/material/Link';
 import Stack from '@mui/material/Stack';
 import Divider from '@mui/material/Divider';
-import { alpha } from '@mui/material/styles';
 import Container from '@mui/material/Container';
 import Grid from '@mui/material/Unstable_Grid2';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
+import { alpha, useTheme } from '@mui/material/styles';
 
 import { paths } from 'src/routes/paths';
 import { usePathname } from 'src/routes/hooks';
@@ -45,7 +45,7 @@ const LINKS = [
 
 export default function Footer() {
   const pathname = usePathname();
-
+  const theme = useTheme();
   const homePage = pathname === '/';
 
   const simpleFooter = (
@@ -55,16 +55,14 @@ export default function Footer() {
         py: 5,
         textAlign: 'center',
         position: 'relative',
-        bgcolor: 'background.default',
+        bgcolor: 'primary.light',
       }}
     >
-      <Container>
+      <Container sx={{ backgroundColor: theme.palette.primary.light }}>
         <Logo sx={{ mb: 1, mx: 'auto' }} />
 
         <Typography variant="caption" component="div">
-          © All rights reserved
-          <br /> made by
-          <Link href="https://minimals.cc/"> minimals.cc </Link>
+          2024© All rights reserved
         </Typography>
       </Container>
     </Box>

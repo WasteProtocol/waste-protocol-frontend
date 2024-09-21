@@ -2,12 +2,12 @@ import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
-import { useTheme } from '@mui/material/styles';
 import Container from '@mui/material/Container';
+import { alpha, useTheme } from '@mui/material/styles';
 
 import { useOffSetTop } from 'src/hooks/use-off-set-top';
 
-import { bgBlur } from 'src/theme/css';
+import { bgBlur, bgGradient } from 'src/theme/css';
 
 import Logo from 'src/components/logo';
 
@@ -27,6 +27,11 @@ export default function Header() {
       <Toolbar
         disableGutters
         sx={{
+          ...bgGradient({
+            direction: '135deg',
+            startColor: alpha(theme.palette.primary.light, 1),
+            endColor: alpha(theme.palette.primary.light, 1),
+          }),
           height: {
             xs: HEADER.H_MOBILE,
             md: HEADER.H_DESKTOP,
@@ -37,7 +42,7 @@ export default function Header() {
           }),
           ...(offsetTop && {
             ...bgBlur({
-              color: theme.palette.background.default,
+              color: theme.palette.primary.light,
             }),
             height: {
               md: HEADER.H_DESKTOP_OFFSET,
@@ -45,7 +50,13 @@ export default function Header() {
           }),
         }}
       >
-        <Container sx={{ height: 1, display: 'flex', alignItems: 'center' }}>
+        <Container
+          sx={{
+            height: 1,
+            display: 'flex',
+            alignItems: 'center',
+          }}
+        >
           <Logo />
 
           <Box sx={{ flexGrow: 1 }} />
