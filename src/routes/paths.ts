@@ -18,6 +18,7 @@ const ROOTS = {
 
 export const paths = {
   purchase: '/purchase',
+  purchaseNew: '/purchase/new',
   approve: '/approve',
   comingSoon: '/coming-soon',
   maintenance: '/maintenance',

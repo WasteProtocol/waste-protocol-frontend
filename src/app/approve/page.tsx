@@ -1,5 +1,5 @@
-import PurchaseView from 'src/sections/purchase/views/purchase-view';
+import ApproveView from 'src/sections/approve/views/approve-view';
 
 export default function Page() {
-  return <PurchaseView />;
+  return <ApproveView />;
 }

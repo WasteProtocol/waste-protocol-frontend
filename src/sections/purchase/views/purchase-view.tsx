@@ -1,13 +1,39 @@
+'use client';
+
 import Stack from '@mui/material/Stack';
+import Button from '@mui/material/Button';
 import Container from '@mui/material/Container';
 import Grid from '@mui/material/Unstable_Grid2';
 
-import UserListView from '../purchase-list';
+import { paths } from 'src/routes/paths';
+import { RouterLink } from 'src/routes/components';
+
+import Iconify from 'src/components/iconify';
+import CustomBreadcrumbs from 'src/components/custom-breadcrumbs';
+
+import PurchaseList from '../purchase-list';
 import WidgetSummary from '../widget-summary';
 
 export default function PurchaseView() {
   return (
     <Container>
+      <CustomBreadcrumbs
+        heading="Purchase"
+        links={[]}
+        action={
+          <Button
+            component={RouterLink}
+            href={paths.purchaseNew}
+            variant="contained"
+            startIcon={<Iconify icon="mingcute:add-line" />}
+          >
+            New Purchase
+          </Button>
+        }
+        sx={{
+          mb: { xs: 3, md: 5 },
+        }}
+      />
       <Stack spacing={3}>
         <Grid container spacing={3}>
           <Grid xs={12} sm={4} md={4}>
@@ -37,7 +63,7 @@ export default function PurchaseView() {
           </Grid>
         </Grid>
 
-        <UserListView />
+        <PurchaseList />
       </Stack>
     </Container>
   );

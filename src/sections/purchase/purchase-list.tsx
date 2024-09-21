@@ -1,14 +1,10 @@
 'use client';
 
-import isEqual from 'lodash/isEqual';
 import { useState, useCallback } from 'react';
 
-import Tab from '@mui/material/Tab';
-import Tabs from '@mui/material/Tabs';
 import Card from '@mui/material/Card';
 import Table from '@mui/material/Table';
 import Tooltip from '@mui/material/Tooltip';
-import { alpha } from '@mui/material/styles';
 import TableBody from '@mui/material/TableBody';
 import IconButton from '@mui/material/IconButton';
 import TableContainer from '@mui/material/TableContainer';
@@ -18,9 +14,8 @@ import { useRouter } from 'src/routes/hooks';
 
 import { useBoolean } from 'src/hooks/use-boolean';
 
-import { _userList, USER_STATUS_OPTIONS } from 'src/_mock';
+import { _userList } from 'src/_mock';
 
-import Label from 'src/components/label';
 import Iconify from 'src/components/iconify';
 import Scrollbar from 'src/components/scrollbar';
 import { useSnackbar } from 'src/components/snackbar';
@@ -28,20 +23,17 @@ import {
   useTable,
   emptyRows,
   TableNoData,
-  getComparator,
   TableEmptyRows,
   TableHeadCustom,
   TableSelectedAction,
   TablePaginationCustom,
 } from 'src/components/table';
 
-import { IUserItem, IUserTableFilters, IUserTableFilterValue } from 'src/types/user';
+import { IUserItem } from 'src/types/user';
 
-import UserTableRow from './user-table-row';
+import PurchaseTableRow from './purchase-table-row';
 
 // ----------------------------------------------------------------------
-
-const STATUS_OPTIONS = [{ value: 'all', label: 'All' }, ...USER_STATUS_OPTIONS];
 
 const TABLE_HEAD = [
   { id: 'name', label: 'Name' },
@@ -51,12 +43,6 @@ const TABLE_HEAD = [
   { id: 'status', label: 'Status', width: 100 },
   { id: '', width: 88 },
 ];
-
-const defaultFilters: IUserTableFilters = {
-  name: '',
-  role: [],
-  status: 'all',
-};
 
 // ----------------------------------------------------------------------
 
@@ -71,35 +57,14 @@ export default function UserListView() {
 
   const [tableData, setTableData] = useState<IUserItem[]>(_userList);
 
-  const [filters, setFilters] = useState(defaultFilters);
-
-  const dataFiltered = applyFilter({
-    inputData: tableData,
-    comparator: getComparator(table.order, table.orderBy),
-    filters,
-  });
-
-  const dataInPage = dataFiltered.slice(
+  const dataInPage = tableData.slice(
     table.page * table.rowsPerPage,
     table.page * table.rowsPerPage + table.rowsPerPage
   );
 
   const denseHeight = table.dense ? 56 : 56 + 20;
 
-  const canReset = !isEqual(defaultFilters, filters);
-
-  const notFound = (!dataFiltered.length && canReset) || !dataFiltered.length;
-
-  const handleFilters = useCallback(
-    (name: string, value: IUserTableFilterValue) => {
-      table.onResetPage();
-      setFilters((prevState) => ({
-        ...prevState,
-        [name]: value,
-      }));
-    },
-    [table]
-  );
+  const notFound = !tableData.length;
 
   const handleDeleteRow = useCallback(
     (id: string) => {
@@ -121,59 +86,17 @@ export default function UserListView() {
     [router]
   );
 
-  const handleFilterStatus = useCallback(
-    (event: React.SyntheticEvent, newValue: string) => {
-      handleFilters('status', newValue);
-    },
-    [handleFilters]
-  );
-
   return (
     <Card>
-      <Tabs
-        value={filters.status}
-        onChange={handleFilterStatus}
-        sx={{
-          px: 2.5,
-          boxShadow: (theme) => `inset 0 -2px 0 0 ${alpha(theme.palette.grey[500], 0.08)}`,
-        }}
-      >
-        {STATUS_OPTIONS.map((tab) => (
-          <Tab
-            key={tab.value}
-            iconPosition="end"
-            value={tab.value}
-            label={tab.label}
-            icon={
-              <Label
-                variant={
-                  ((tab.value === 'all' || tab.value === filters.status) && 'filled') || 'soft'
-                }
-                color={
-                  (tab.value === 'active' && 'success') ||
-                  (tab.value === 'pending' && 'warning') ||
-                  (tab.value === 'banned' && 'error') ||
-                  'default'
-                }
-              >
-                {['active', 'pending', 'banned', 'rejected'].includes(tab.value)
-                  ? tableData.filter((user) => user.status === tab.value).length
-                  : tableData.length}
-              </Label>
-            }
-          />
-        ))}
-      </Tabs>
-
       <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
         <TableSelectedAction
           dense={table.dense}
           numSelected={table.selected.length}
-          rowCount={dataFiltered.length}
+          rowCount={tableData.length}
           onSelectAllRows={(checked) =>
             table.onSelectAllRows(
               checked,
-              dataFiltered.map((row) => row.id)
+              tableData.map((row) => row.id)
             )
           }
           action={
@@ -191,25 +114,25 @@ export default function UserListView() {
               order={table.order}
               orderBy={table.orderBy}
               headLabel={TABLE_HEAD}
-              rowCount={dataFiltered.length}
+              rowCount={tableData.length}
               numSelected={table.selected.length}
               onSort={table.onSort}
               onSelectAllRows={(checked) =>
                 table.onSelectAllRows(
                   checked,
-                  dataFiltered.map((row) => row.id)
+                  tableData.map((row) => row.id)
                 )
               }
             />
 
             <TableBody>
-              {dataFiltered
+              {tableData
                 .slice(
                   table.page * table.rowsPerPage,
                   table.page * table.rowsPerPage + table.rowsPerPage
                 )
                 .map((row) => (
-                  <UserTableRow
+                  <PurchaseTableRow
                     key={row.id}
                     row={row}
                     selected={table.selected.includes(row.id)}
@@ -221,7 +144,7 @@ export default function UserListView() {
 
               <TableEmptyRows
                 height={denseHeight}
-                emptyRows={emptyRows(table.page, table.rowsPerPage, dataFiltered.length)}
+                emptyRows={emptyRows(table.page, table.rowsPerPage, tableData.length)}
               />
 
               <TableNoData notFound={notFound} />
@@ -231,7 +154,7 @@ export default function UserListView() {
       </TableContainer>
 
       <TablePaginationCustom
-        count={dataFiltered.length}
+        count={tableData.length}
         page={table.page}
         rowsPerPage={table.rowsPerPage}
         onPageChange={table.onChangePage}
@@ -242,44 +165,4 @@ export default function UserListView() {
       />
     </Card>
   );
-}
-
-// ----------------------------------------------------------------------
-
-function applyFilter({
-  inputData,
-  comparator,
-  filters,
-}: {
-  inputData: IUserItem[];
-  comparator: (a: any, b: any) => number;
-  filters: IUserTableFilters;
-}) {
-  const { name, status, role } = filters;
-
-  const stabilizedThis = inputData.map((el, index) => [el, index] as const);
-
-  stabilizedThis.sort((a, b) => {
-    const order = comparator(a[0], b[0]);
-    if (order !== 0) return order;
-    return a[1] - b[1];
-  });
-
-  inputData = stabilizedThis.map((el) => el[0]);
-
-  if (name) {
-    inputData = inputData.filter(
-      (user) => user.name.toLowerCase().indexOf(name.toLowerCase()) !== -1
-    );
-  }
-
-  if (status !== 'all') {
-    inputData = inputData.filter((user) => user.status === status);
-  }
-
-  if (role.length) {
-    inputData = inputData.filter((user) => role.includes(user.role));
-  }
-
-  return inputData;
 }

@@ -27,7 +27,7 @@ type Props = {
   onDeleteRow: VoidFunction;
 };
 
-export default function UserTableRow({
+export default function PurchaseTableRow({
   row,
   selected,
   onEditRow,

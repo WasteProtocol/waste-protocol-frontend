@@ -1,6 +1,9 @@
 /* eslint-disable perfectionist/sort-imports */
 import 'src/global.css';
 
+// i18n
+import 'src/locales/i18n';
+
 // ----------------------------------------------------------------------
 
 import { headers } from 'next/headers';
@@ -16,6 +19,7 @@ import DynamicProvider from 'src/libs/dynamic/DynamicProvider';
 import ReownProvider from 'src/libs/reown/ReownProvider';
 import { PropsWithChildren } from 'react';
 import { AuthProvider } from 'src/auth/context';
+import { LocalizationProvider } from 'src/locales';
 
 // ----------------------------------------------------------------------
 
@@ -44,7 +48,7 @@ type Props = {
   children: React.ReactNode;
 };
 
-const AuthProviderWrapper = ({ children }: PropsWithChildren) => {
+const WalletProvider = ({ children }: PropsWithChildren) => {
   if (process.env.NEXT_PUBLIC_AUTH_MODE === 'REOWN') {
     const cookies = headers().get('cookie');
     return <ReownProvider cookies={cookies}>{children}</ReownProvider>;
@@ -57,30 +61,32 @@ export default function RootLayout({ children }: Props) {
   return (
     <html lang="en" className={primaryFont.className}>
       <body>
-        <AuthProviderWrapper>
+        <WalletProvider>
           <AuthProvider>
-            <SettingsProvider
-              defaultSettings={{
-                themeMode: 'light', // 'light' | 'dark'
-                themeDirection: 'ltr', //  'rtl' | 'ltr'
-                themeContrast: 'default', // 'default' | 'bold'
-                themeLayout: 'vertical', // 'vertical' | 'horizontal' | 'mini'
-                themeColorPresets: 'default', // 'default' | 'cyan' | 'purple' | 'blue' | 'orange' | 'red'
-                themeStretch: false,
-              }}
-            >
-              <ThemeProvider>
-                <MotionLazy>
-                  <SnackbarProvider>
-                    <SettingsDrawer />
-                    <ProgressBar />
-                    {children}
-                  </SnackbarProvider>
-                </MotionLazy>
-              </ThemeProvider>
-            </SettingsProvider>
+            <LocalizationProvider>
+              <SettingsProvider
+                defaultSettings={{
+                  themeMode: 'light', // 'light' | 'dark'
+                  themeDirection: 'ltr', //  'rtl' | 'ltr'
+                  themeContrast: 'default', // 'default' | 'bold'
+                  themeLayout: 'vertical', // 'vertical' | 'horizontal' | 'mini'
+                  themeColorPresets: 'default', // 'default' | 'cyan' | 'purple' | 'blue' | 'orange' | 'red'
+                  themeStretch: false,
+                }}
+              >
+                <ThemeProvider>
+                  <MotionLazy>
+                    <SnackbarProvider>
+                      <SettingsDrawer />
+                      <ProgressBar />
+                      {children}
+                    </SnackbarProvider>
+                  </MotionLazy>
+                </ThemeProvider>
+              </SettingsProvider>
+            </LocalizationProvider>
           </AuthProvider>
-        </AuthProviderWrapper>
+        </WalletProvider>
       </body>
     </html>
   );
