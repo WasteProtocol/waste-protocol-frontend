@@ -12,9 +12,11 @@ import CircularProgress from '@mui/material/CircularProgress';
 
 import { useRouter, useSearchParams } from 'src/routes/hooks';
 
+import axios from 'src/utils/axios';
+
 import { config } from 'src/libs/reown/config';
 import { useAuthContext } from 'src/auth/hooks';
-import { PATH_AFTER_LOGIN } from 'src/config-global';
+import { HOST_API, PATH_AFTER_LOGIN } from 'src/config-global';
 
 // ----------------------------------------------------------------------
 
@@ -22,7 +24,7 @@ export default function JwtLoginView() {
   const { login } = useAuthContext();
   const { open } = useAppKit();
 
-  const { isConnected } = useAccount();
+  const { isConnected, address } = useAccount();
 
   const router = useRouter();
 
@@ -35,7 +37,6 @@ export default function JwtLoginView() {
   useEffect(() => {
     (async () => {
       if (isConnected) {
-        await signWalletMessage();
         await onSubmit();
       }
     })();
@@ -43,15 +44,19 @@ export default function JwtLoginView() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isConnected]);
 
-  const signWalletMessage = async () => {
-    const signature = await signMessage(config, { message: 'hello world' });
-
-    console.log('signature', signature);
-  };
-
   const onSubmit = async () => {
     try {
-      await login?.('demo@minimals.cc', 'demo1234');
+      if (!address) return;
+
+      const { data } = await axios.post(`${HOST_API!}/auth/signin/public-address`, {
+        publicAddress: address,
+      });
+
+      const signature = await signMessage(config, { message: data.data.msg });
+
+      console.log('signature', signature);
+
+      await login?.(signature, address);
       router.push(returnTo || PATH_AFTER_LOGIN);
     } catch (error) {
       console.error(error);

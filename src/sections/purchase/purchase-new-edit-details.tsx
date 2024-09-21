@@ -7,16 +7,18 @@ import Divider from '@mui/material/Divider';
 import MenuItem from '@mui/material/MenuItem';
 import Typography from '@mui/material/Typography';
 
-import { fCurrency } from 'src/utils/format-number';
-
-import { INVOICE_SERVICE_OPTIONS } from 'src/_mock';
+import { fNumber } from 'src/utils/format-number';
 
 import Iconify from 'src/components/iconify';
 import { RHFSelect, RHFTextField } from 'src/components/hook-form';
 
 // ----------------------------------------------------------------------
 
-export default function InvoiceNewEditDetails() {
+type Props = {
+  categories: { name: string; id: string; emissionRate: number }[];
+};
+
+export default function InvoiceNewEditDetails({ categories }: Props) {
   const { control, watch } = useFormContext();
 
   const { fields, append, remove } = useFieldArray({
@@ -25,6 +27,9 @@ export default function InvoiceNewEditDetails() {
   });
 
   const values = watch();
+
+  const emissionRate = (index: number) =>
+    categories.find((category) => category.id === values.items[index].wasteItemId)?.emissionRate;
 
   // const totalOnRow = values.items.map((item: IInvoiceItem) => item.quantity * item.price);
 
@@ -54,42 +59,30 @@ export default function InvoiceNewEditDetails() {
       sx={{ mt: 3, textAlign: 'right', typography: 'body2' }}
     >
       <Stack direction="row">
-        <Box sx={{ color: 'text.secondary' }}>Subtotal</Box>
-        <Box sx={{ width: 160, typography: 'subtitle2' }}>{fCurrency(1234) || '-'}</Box>
+        <Box sx={{ color: 'text.secondary' }}>Points earned</Box>
+        <Box sx={{ width: 160 }}>{fNumber(234)}</Box>
       </Stack>
 
       <Stack direction="row">
-        <Box sx={{ color: 'text.secondary' }}>Shipping</Box>
+        <Box sx={{ color: 'text.secondary' }}>Coin Reward</Box>
         <Box
           sx={{
             width: 160,
-            ...(values.shipping && { color: 'error.main' }),
           }}
         >
-          {values.shipping ? `- ${fCurrency(1234)}` : '-'}
+          USDC
         </Box>
       </Stack>
 
       <Stack direction="row">
-        <Box sx={{ color: 'text.secondary' }}>Discount</Box>
+        <Box sx={{ color: 'text.secondary' }}>Coins received</Box>
         <Box
           sx={{
             width: 160,
-            ...(values.discount && { color: 'error.main' }),
           }}
         >
-          {values.discount ? `- ${fCurrency(1234)}` : '-'}
+          {values.discount ? `- ${fNumber(1234)}` : '-'}
         </Box>
-      </Stack>
-
-      <Stack direction="row">
-        <Box sx={{ color: 'text.secondary' }}>Taxes</Box>
-        <Box sx={{ width: 160 }}>{values.taxes ? fCurrency(values.taxes) : '-'}</Box>
-      </Stack>
-
-      <Stack direction="row" sx={{ typography: 'subtitle1' }}>
-        <Box>Total</Box>
-        <Box sx={{ width: 160 }}>{fCurrency(1234) || '-'}</Box>
       </Stack>
     </Stack>
   );
@@ -113,12 +106,23 @@ export default function InvoiceNewEditDetails() {
                   maxWidth: { md: 320 },
                 }}
               >
-                {INVOICE_SERVICE_OPTIONS.map((service) => (
-                  <MenuItem key={service.id} value={service.name}>
+                {categories.map((service) => (
+                  <MenuItem key={service.id} value={service.id}>
                     {service.name}
                   </MenuItem>
                 ))}
               </RHFSelect>
+
+              <RHFTextField
+                size="small"
+                type="number"
+                name=""
+                label="Price/Unit"
+                InputLabelProps={{ shrink: true }}
+                value={emissionRate(index)}
+                disabled
+                sx={{ maxWidth: { md: 100 } }}
+              />
 
               <RHFTextField
                 size="small"

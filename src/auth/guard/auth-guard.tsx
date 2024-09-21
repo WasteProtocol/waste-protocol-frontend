@@ -27,6 +27,8 @@ function Container({ children }: Props) {
 
   const { authenticated } = useAuthContext();
 
+  console.log({ authenticated });
+
   const [checked, setChecked] = useState(false);
 
   const check = useCallback(() => {

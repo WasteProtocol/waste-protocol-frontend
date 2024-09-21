@@ -6,12 +6,11 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 
 import { RHFSelect } from 'src/components/hook-form';
 
-// ----------------------------------------------------------------------
+const locations = ['New York', 'San Francisco', 'Los Angeles', 'Chicago', 'Seattle'];
+const purposes = ['Deposit', 'Sell', 'Donate'];
 
 export default function InvoiceNewEditStatusDate() {
-  const { control, watch } = useFormContext();
-
-  const values = watch();
+  const { control } = useFormContext();
 
   return (
     <Stack
@@ -20,7 +19,7 @@ export default function InvoiceNewEditStatusDate() {
       sx={{ p: 3, bgcolor: 'background.neutral' }}
     >
       <Controller
-        name="createDate"
+        name="tradeDate"
         control={control}
         render={({ field, fieldState: { error } }) => (
           <DatePicker
@@ -47,7 +46,7 @@ export default function InvoiceNewEditStatusDate() {
         InputLabelProps={{ shrink: true }}
         PaperPropsSx={{ textTransform: 'capitalize' }}
       >
-        {['paid', 'pending', 'overdue', 'draft'].map((option) => (
+        {locations.map((option) => (
           <MenuItem key={option} value={option}>
             {option}
           </MenuItem>
@@ -61,7 +60,7 @@ export default function InvoiceNewEditStatusDate() {
         InputLabelProps={{ shrink: true }}
         PaperPropsSx={{ textTransform: 'capitalize' }}
       >
-        {['paid', 'pending', 'overdue', 'draft'].map((option) => (
+        {purposes.map((option) => (
           <MenuItem key={option} value={option}>
             {option}
           </MenuItem>

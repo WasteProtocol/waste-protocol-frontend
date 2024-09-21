@@ -1,9 +1,13 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+
 'use client';
 
 import { useAccount, useDisconnect } from 'wagmi';
 import { useMemo, useEffect, useReducer, useCallback } from 'react';
 
 import axios, { endpoints } from 'src/utils/axios';
+
+import { HOST_API } from 'src/config-global';
 
 import { AuthContext } from './auth-context';
 import { setSession, isValidToken } from './utils';
@@ -97,9 +101,9 @@ export function AuthProvider({ children }: Props) {
       if (validToken && isConnected) {
         setSession(accessToken);
 
-        const res = await axios.get(endpoints.auth.me);
+        // const res = await axios.get(endpoints.auth.me);
 
-        const { user } = res.data;
+        const user = {};
 
         dispatch({
           type: Types.INITIAL,
@@ -144,15 +148,16 @@ export function AuthProvider({ children }: Props) {
   }, [isConnected]);
 
   // LOGIN
-  const login = useCallback(async (email: string, password: string) => {
-    const data = {
-      email,
-      password,
-    };
+  const login = useCallback(async (signature: string, publicAddress: string) => {
+    const { data } = await axios.post(`${HOST_API!}/auth/using/public-address`, {
+      publicAddress,
+      signature,
+    });
 
-    const res = await axios.post(endpoints.auth.login, data);
-
-    const { accessToken, user } = res.data;
+    const {
+      tokens: { accessToken },
+      user,
+    } = data.data;
 
     setSession(accessToken);
 
@@ -199,7 +204,7 @@ export function AuthProvider({ children }: Props) {
   // LOGOUT
   const logout = useCallback(async () => {
     if (isConnected) {
-      await disconnect();
+      disconnect();
     }
     setSession(null);
     dispatch({
