@@ -98,7 +98,7 @@ export function AuthProvider({ children }: Props) {
 
       const validToken = !!accessToken && isValidToken(accessToken);
 
-      if (validToken && isConnected) {
+      if (validToken) {
         setSession(accessToken);
 
         // const res = await axios.get(endpoints.auth.me);
@@ -115,7 +115,6 @@ export function AuthProvider({ children }: Props) {
           },
         });
       } else {
-        logout();
         dispatch({
           type: Types.INITIAL,
           payload: {

@@ -1,81 +1,117 @@
-import Button from '@mui/material/Button';
-import Avatar from '@mui/material/Avatar';
-import Tooltip from '@mui/material/Tooltip';
-import MenuItem from '@mui/material/MenuItem';
+import type { ISuccessResult } from '@worldcoin/idkit';
+import { useIDKit, IDKitWidget, VerificationLevel } from '@worldcoin/idkit';
+
 import TableRow from '@mui/material/TableRow';
-import Checkbox from '@mui/material/Checkbox';
 import TableCell from '@mui/material/TableCell';
-import IconButton from '@mui/material/IconButton';
-import ListItemText from '@mui/material/ListItemText';
+import { Button, IconButton } from '@mui/material';
 
 import { useBoolean } from 'src/hooks/use-boolean';
+
+import axios from 'src/utils/axios';
+import { fDate } from 'src/utils/format-time';
+import { fNumber } from 'src/utils/format-number';
+
+import { verify } from 'src/actions/verify';
+import { HOST_API } from 'src/config-global';
 
 import Label from 'src/components/label';
 import Iconify from 'src/components/iconify';
 import { ConfirmDialog } from 'src/components/custom-dialog';
-import CustomPopover, { usePopover } from 'src/components/custom-popover';
-
-import { IUserItem } from 'src/types/user';
 
 // ----------------------------------------------------------------------
 
 type Props = {
-  selected: boolean;
-  onEditRow: VoidFunction;
-  row: IUserItem;
-  onSelectRow: VoidFunction;
-  onDeleteRow: VoidFunction;
+  row: any;
+  onApproveSuccess: () => void;
 };
 
-export default function ApproveTableRow({
-  row,
-  selected,
-  onEditRow,
-  onSelectRow,
-  onDeleteRow,
-}: Props) {
-  const { name, avatarUrl, company, role, status, email, phoneNumber } = row;
+export default function ApproveTableRow({ row, onApproveSuccess }: Props) {
+  const app_id = process.env.NEXT_PUBLIC_WLD_APP_ID as `app_${string}`;
+  const action = process.env.NEXT_PUBLIC_WLD_ACTION;
+
+  if (!app_id) {
+    throw new Error('app_id is not set in environment variables!');
+  }
+  if (!action) {
+    throw new Error('action is not set in environment variables!');
+  }
+
+  const { setOpen } = useIDKit();
 
   const confirm = useBoolean();
+  const approve = useBoolean();
 
-  const quickEdit = useBoolean();
+  const {
+    tradeId,
+    purpose,
+    tradeDate,
+    location,
+    status,
+    totalEmissionAmount,
+    totalTokenReceived,
+    totalUSDCReceived,
+  } = row;
 
-  const popover = usePopover();
+  const onApproveRow = async () => {
+    try {
+      approve.onTrue();
+      await axios.get(`${HOST_API}/trades/approve/${tradeId}`);
+      onApproveSuccess();
+    } catch (error) {
+      console.log(error);
+    } finally {
+      approve.onFalse();
+    }
+  };
+
+  const onSuccess = (result: ISuccessResult) => {
+    // This is where you should perform frontend actions once a user has been verified, such as redirecting to a new page
+    console.log(result.nullifier_hash);
+    onApproveRow();
+  };
+
+  const handleProof = async (result: ISuccessResult) => {
+    console.log('Proof received from IDKit, sending to backend:\n', JSON.stringify(result)); // Log the proof from IDKit to the console for visibility
+    const data = await verify(result);
+    if (data.success) {
+      console.log('Successful response from backend:\n', JSON.stringify(data)); // Log the response from our backend for visibility
+    } else {
+      throw new Error(`Verification failed: ${data.detail}`);
+    }
+  };
 
   return (
     <>
-      <TableRow hover selected={selected}>
-        <TableCell padding="checkbox">
-          <Checkbox checked={selected} onClick={onSelectRow} />
+      <TableRow hover>
+        <TableCell sx={{ whiteSpace: 'nowrap' }} align="center">
+          {tradeId}
         </TableCell>
 
-        <TableCell sx={{ display: 'flex', alignItems: 'center' }}>
-          <Avatar alt={name} src={avatarUrl} sx={{ mr: 2 }} />
+        <TableCell sx={{ whiteSpace: 'nowrap' }}>{fDate(tradeDate)}</TableCell>
 
-          <ListItemText
-            primary={name}
-            secondary={email}
-            primaryTypographyProps={{ typography: 'body2' }}
-            secondaryTypographyProps={{
-              component: 'span',
-              color: 'text.disabled',
-            }}
-          />
+        <TableCell sx={{ whiteSpace: 'nowrap' }}>{purpose}</TableCell>
+
+        <TableCell sx={{ whiteSpace: 'nowrap' }}>{location}</TableCell>
+
+        <TableCell sx={{ whiteSpace: 'nowrap' }} align="center">
+          {fNumber(totalEmissionAmount)}
         </TableCell>
 
-        <TableCell sx={{ whiteSpace: 'nowrap' }}>{phoneNumber}</TableCell>
+        <TableCell sx={{ whiteSpace: 'nowrap' }} align="center">
+          {fNumber(totalTokenReceived)}
+        </TableCell>
 
-        <TableCell sx={{ whiteSpace: 'nowrap' }}>{company}</TableCell>
+        <TableCell sx={{ whiteSpace: 'nowrap' }} align="center">
+          {fNumber(totalUSDCReceived)}
+        </TableCell>
 
-        <TableCell sx={{ whiteSpace: 'nowrap' }}>{role}</TableCell>
-
-        <TableCell>
+        <TableCell sx={{ whiteSpace: 'nowrap' }} align="center">
           <Label
             variant="soft"
             color={
-              (status === 'active' && 'success') ||
-              (status === 'pending' && 'warning') ||
-              (status === 'banned' && 'error') ||
+              (status === 'Approved' && 'success') ||
+              (status === 'Pending' && 'default') ||
+              (status === 'Rejected' && 'error') ||
               'default'
             }
           >
@@ -83,57 +119,38 @@ export default function ApproveTableRow({
           </Label>
         </TableCell>
 
-        <TableCell align="right" sx={{ px: 1, whiteSpace: 'nowrap' }}>
-          <Tooltip title="Quick Edit" placement="top" arrow>
-            <IconButton color={quickEdit.value ? 'inherit' : 'default'} onClick={quickEdit.onTrue}>
-              <Iconify icon="solar:pen-bold" />
+        <TableCell align="center" sx={{ px: 1, whiteSpace: 'nowrap' }}>
+          {status === 'Pending' && (
+            <IconButton onClick={confirm.onTrue}>
+              <Iconify icon="eva:more-vertical-fill" />
             </IconButton>
-          </Tooltip>
-
-          <IconButton color={popover.open ? 'inherit' : 'default'} onClick={popover.onOpen}>
-            <Iconify icon="eva:more-vertical-fill" />
-          </IconButton>
+          )}
         </TableCell>
       </TableRow>
-
-      <CustomPopover
-        open={popover.open}
-        onClose={popover.onClose}
-        arrow="right-top"
-        sx={{ width: 140 }}
-      >
-        <MenuItem
-          onClick={() => {
-            confirm.onTrue();
-            popover.onClose();
-          }}
-          sx={{ color: 'error.main' }}
-        >
-          <Iconify icon="solar:trash-bin-trash-bold" />
-          Delete
-        </MenuItem>
-
-        <MenuItem
-          onClick={() => {
-            onEditRow();
-            popover.onClose();
-          }}
-        >
-          <Iconify icon="solar:pen-bold" />
-          Edit
-        </MenuItem>
-      </CustomPopover>
 
       <ConfirmDialog
         open={confirm.value}
         onClose={confirm.onFalse}
-        title="Delete"
-        content="Are you sure want to delete?"
+        title="Approve"
+        content="Are you sure want to approve?"
         action={
-          <Button variant="contained" color="error" onClick={onDeleteRow}>
-            Delete
+          <Button
+            variant="contained"
+            color="success"
+            onClick={() => setOpen(true)}
+            disabled={approve.value}
+          >
+            Approve
           </Button>
         }
+      />
+
+      <IDKitWidget
+        action={action}
+        app_id={app_id}
+        onSuccess={onSuccess}
+        handleVerify={handleProof}
+        verification_level={VerificationLevel.Orb} // Change this to VerificationLevel.Device to accept Orb- and Device-verified users
       />
     </>
   );
