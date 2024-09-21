@@ -3,13 +3,13 @@ import { useEffect } from 'react';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Drawer from '@mui/material/Drawer';
+import Typography from '@mui/material/Typography';
 
 import { usePathname } from 'src/routes/hooks';
 
 import { useResponsive } from 'src/hooks/use-responsive';
 import { useMockedUser } from 'src/hooks/use-mocked-user';
 
-import Logo from 'src/components/logo';
 import Scrollbar from 'src/components/scrollbar';
 import { NavSectionVertical } from 'src/components/nav-section';
 
@@ -51,7 +51,15 @@ export default function NavVertical({ openNav, onCloseNav }: Props) {
         },
       }}
     >
-      <Logo sx={{ mt: 3, ml: 4, mb: 1 }} />
+      <Box
+        component="div"
+        sx={{
+          height: 100,
+          display: 'inline-flex',
+        }}
+      >
+        <Typography sx={{ fontSize: 24, pl: 2, pt: 4 }}>WasteProtocol</Typography>
+      </Box>
 
       <NavSectionVertical
         data={navData}

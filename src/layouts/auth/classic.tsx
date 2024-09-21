@@ -152,10 +152,6 @@ export default function AuthClassicLayout({ children, image, title }: Props) {
         minHeight: '100vh',
       }}
     >
-      {renderLogo}
-
-      {mdUp && renderSection}
-
       {renderContent}
     </Stack>
   );

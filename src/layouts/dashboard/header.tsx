@@ -5,6 +5,7 @@ import { DynamicWidget } from '@dynamic-labs/sdk-react-core';
 import Stack from '@mui/material/Stack';
 import AppBar from '@mui/material/AppBar';
 import Button from '@mui/material/Button';
+import Avatar from '@mui/material/Avatar';
 import Toolbar from '@mui/material/Toolbar';
 import { useTheme } from '@mui/material/styles';
 import IconButton from '@mui/material/IconButton';
@@ -43,6 +44,7 @@ export default function Header({ onOpenNav }: Props) {
   const offset = useOffSetTop(HEADER.H_DESKTOP);
 
   const offsetTop = offset && !isNavHorizontal;
+  const avatarNum = Math.floor(Math.random() * 7) + 1;
 
   const renderContent = (
     <>
@@ -62,6 +64,7 @@ export default function Header({ onOpenNav }: Props) {
         spacing={{ xs: 0.5, sm: 1 }}
       >
         <SettingsButton />
+        <Avatar src={`../assets/avatars/${avatarNum}.svg`} />
         {isConnected && (
           <>
             {process.env.NEXT_PUBLIC_AUTH_MODE === 'REOWN' ? (
