@@ -1,13 +1,10 @@
 /* eslint-disable perfectionist/sort-imports */
 import 'src/global.css';
 
-// i18n
-import 'src/locales/i18n';
-
 // ----------------------------------------------------------------------
 
+import { headers } from 'next/headers';
 import ThemeProvider from 'src/theme';
-import { LocalizationProvider } from 'src/locales';
 import { primaryFont } from 'src/theme/typography';
 
 import ProgressBar from 'src/components/progress-bar';
@@ -15,12 +12,10 @@ import { MotionLazy } from 'src/components/animate/motion-lazy';
 import SnackbarProvider from 'src/components/snackbar/snackbar-provider';
 import { SettingsDrawer, SettingsProvider } from 'src/components/settings';
 
-import { AuthProvider } from 'src/auth/context/jwt-dynamic';
 import DynamicProvider from 'src/libs/dynamic/DynamicProvider';
-// import { AuthProvider } from 'src/auth/context/auth0';
-// import { AuthProvider } from 'src/auth/context/amplify';
-// import { AuthProvider } from 'src/auth/context/firebase';
-// import { AuthProvider } from 'src/auth/context/supabase';
+import ReownProvider from 'src/libs/reown/ReownProvider';
+import { PropsWithChildren } from 'react';
+import { AuthProvider } from 'src/auth/context';
 
 // ----------------------------------------------------------------------
 
@@ -49,36 +44,43 @@ type Props = {
   children: React.ReactNode;
 };
 
+const AuthProviderWrapper = ({ children }: PropsWithChildren) => {
+  if (process.env.NEXT_PUBLIC_AUTH_MODE === 'REOWN') {
+    const cookies = headers().get('cookie');
+    return <ReownProvider cookies={cookies}>{children}</ReownProvider>;
+  }
+
+  return <DynamicProvider>{children}</DynamicProvider>;
+};
+
 export default function RootLayout({ children }: Props) {
   return (
     <html lang="en" className={primaryFont.className}>
       <body>
-        <DynamicProvider>
+        <AuthProviderWrapper>
           <AuthProvider>
-            <LocalizationProvider>
-              <SettingsProvider
-                defaultSettings={{
-                  themeMode: 'light', // 'light' | 'dark'
-                  themeDirection: 'ltr', //  'rtl' | 'ltr'
-                  themeContrast: 'default', // 'default' | 'bold'
-                  themeLayout: 'vertical', // 'vertical' | 'horizontal' | 'mini'
-                  themeColorPresets: 'default', // 'default' | 'cyan' | 'purple' | 'blue' | 'orange' | 'red'
-                  themeStretch: false,
-                }}
-              >
-                <ThemeProvider>
-                  <MotionLazy>
-                    <SnackbarProvider>
-                      <SettingsDrawer />
-                      <ProgressBar />
-                      {children}
-                    </SnackbarProvider>
-                  </MotionLazy>
-                </ThemeProvider>
-              </SettingsProvider>
-            </LocalizationProvider>
+            <SettingsProvider
+              defaultSettings={{
+                themeMode: 'light', // 'light' | 'dark'
+                themeDirection: 'ltr', //  'rtl' | 'ltr'
+                themeContrast: 'default', // 'default' | 'bold'
+                themeLayout: 'vertical', // 'vertical' | 'horizontal' | 'mini'
+                themeColorPresets: 'default', // 'default' | 'cyan' | 'purple' | 'blue' | 'orange' | 'red'
+                themeStretch: false,
+              }}
+            >
+              <ThemeProvider>
+                <MotionLazy>
+                  <SnackbarProvider>
+                    <SettingsDrawer />
+                    <ProgressBar />
+                    {children}
+                  </SnackbarProvider>
+                </MotionLazy>
+              </ThemeProvider>
+            </SettingsProvider>
           </AuthProvider>
-        </DynamicProvider>
+        </AuthProviderWrapper>
       </body>
     </html>
   );

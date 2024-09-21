@@ -1,13 +1,13 @@
 'use client';
 
+import { useAccount, useDisconnect } from 'wagmi';
 import { useMemo, useEffect, useReducer, useCallback } from 'react';
-import { useIsLoggedIn, useDynamicContext } from '@dynamic-labs/sdk-react-core';
 
 import axios, { endpoints } from 'src/utils/axios';
 
 import { AuthContext } from './auth-context';
 import { setSession, isValidToken } from './utils';
-import { AuthUserType, ActionMapType, AuthStateType } from '../../types';
+import { AuthUserType, ActionMapType, AuthStateType } from '../types';
 
 // ----------------------------------------------------------------------
 /**
@@ -84,9 +84,9 @@ type Props = {
 
 export function AuthProvider({ children }: Props) {
   const [state, dispatch] = useReducer(reducer, initialState);
-  const { handleLogOut } = useDynamicContext();
 
-  const isLoggedIn = useIsLoggedIn();
+  const { isConnected } = useAccount();
+  const { disconnect } = useDisconnect();
 
   const initialize = useCallback(async () => {
     try {
@@ -94,7 +94,7 @@ export function AuthProvider({ children }: Props) {
 
       const validToken = !!accessToken && isValidToken(accessToken);
 
-      if (validToken && isLoggedIn) {
+      if (validToken && isConnected) {
         setSession(accessToken);
 
         const res = await axios.get(endpoints.auth.me);
@@ -136,12 +136,12 @@ export function AuthProvider({ children }: Props) {
   }, [initialize]);
 
   useEffect(() => {
-    if (state.user && !isLoggedIn) {
+    if (state.user && !isConnected) {
       logout();
       window.location.reload();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isLoggedIn]);
+  }, [isConnected]);
 
   // LOGIN
   const login = useCallback(async (email: string, password: string) => {
@@ -198,14 +198,14 @@ export function AuthProvider({ children }: Props) {
 
   // LOGOUT
   const logout = useCallback(async () => {
-    if (isLoggedIn) {
-      await handleLogOut();
+    if (isConnected) {
+      await disconnect();
     }
     setSession(null);
     dispatch({
       type: Types.LOGOUT,
     });
-  }, [handleLogOut, isLoggedIn]);
+  }, [disconnect, isConnected]);
 
   // ----------------------------------------------------------------------
 

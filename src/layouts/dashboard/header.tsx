@@ -1,7 +1,10 @@
-import { DynamicWidget, useIsLoggedIn } from '@dynamic-labs/sdk-react-core';
+import { useAccount } from 'wagmi';
+import { useAppKit } from '@reown/appkit/react';
+import { DynamicWidget } from '@dynamic-labs/sdk-react-core';
 
 import Stack from '@mui/material/Stack';
 import AppBar from '@mui/material/AppBar';
+import Button from '@mui/material/Button';
 import Toolbar from '@mui/material/Toolbar';
 import { useTheme } from '@mui/material/styles';
 import IconButton from '@mui/material/IconButton';
@@ -26,8 +29,8 @@ type Props = {
 
 export default function Header({ onOpenNav }: Props) {
   const theme = useTheme();
-
-  const isLoggedIn = useIsLoggedIn();
+  const { open } = useAppKit();
+  const { address, isConnected } = useAccount();
 
   const settings = useSettingsContext();
 
@@ -59,8 +62,15 @@ export default function Header({ onOpenNav }: Props) {
         spacing={{ xs: 0.5, sm: 1 }}
       >
         <SettingsButton />
-
-        {isLoggedIn && <DynamicWidget />}
+        {isConnected && (
+          <>
+            {process.env.NEXT_PUBLIC_AUTH_MODE === 'REOWN' ? (
+              <Button onClick={() => open()}>{address}</Button>
+            ) : (
+              <DynamicWidget />
+            )}
+          </>
+        )}
       </Stack>
     </>
   );
