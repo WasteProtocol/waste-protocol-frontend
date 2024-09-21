@@ -20,7 +20,7 @@ export default function OverviewEcommerceView() {
   // const { user } = useMockedUser();
   const { scrollYProgress } = useScroll();
 
-  const chartBgColor = '#FFFDF2'; // FDF8FF , F5FCFF, FFFDF2
+  const chartBgColor = '#fdfdfd'; // FDF8FF , F5FCFF, FFFDF2
 
   return (
     <MainLayout>
@@ -54,6 +54,32 @@ export default function OverviewEcommerceView() {
           <Typography variant="h2" sx={{ pl: 1 }}>
             Our stats
           </Typography>
+        </Grid>
+
+        <Grid container spacing={3} sx={{ mt: 2 }}>
+          <Grid xs={4} md={4} lg={4}>
+            <EcommerceWidgetSummary
+              title="Product Sold"
+              total={765}
+              sx={{ backgroundColor: chartBgColor }}
+            />
+          </Grid>
+
+          <Grid xs={4}>
+            <EcommerceWidgetSummary
+              title="Total Balance"
+              total={18765}
+              sx={{ backgroundColor: chartBgColor }}
+            />
+          </Grid>
+
+          <Grid xs={4}>
+            <EcommerceWidgetSummary
+              title="Sales Profit"
+              total={4876}
+              sx={{ backgroundColor: chartBgColor }}
+            />
+          </Grid>
         </Grid>
 
         <Grid container spacing={3} sx={{ mt: 6 }}>
@@ -120,32 +146,6 @@ export default function OverviewEcommerceView() {
                 ],
               }}
             />
-          </Grid>
-
-          <Grid xs={12} md={6} lg={4}>
-            <Grid xs={12}>
-              <EcommerceWidgetSummary
-                title="Product Sold"
-                total={765}
-                sx={{ backgroundColor: chartBgColor }}
-              />
-            </Grid>
-
-            <Grid xs={12} sx={{ mt: 2 }}>
-              <EcommerceWidgetSummary
-                title="Total Balance"
-                total={18765}
-                sx={{ backgroundColor: chartBgColor }}
-              />
-            </Grid>
-
-            <Grid xs={12} sx={{ mt: 2 }}>
-              <EcommerceWidgetSummary
-                title="Sales Profit"
-                total={4876}
-                sx={{ backgroundColor: chartBgColor }}
-              />
-            </Grid>
           </Grid>
         </Grid>
       </Container>
