@@ -1,4 +1,4 @@
-import { Barlow, Figtree, Londrina_Solid } from 'next/font/google';
+import { Barlow, Londrina_Solid } from 'next/font/google';
 
 // ----------------------------------------------------------------------
 
@@ -32,7 +32,7 @@ declare module '@mui/material/styles' {
 }
 
 export const primaryFont = Londrina_Solid({
-  weight: ['100', '300', '400',  '900'],
+  weight: ['100', '300', '400', '900'],
   subsets: ['latin'],
   display: 'swap',
   fallback: ['Helvetica', 'Arial', 'sans-serif'],

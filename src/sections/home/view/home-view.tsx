@@ -3,12 +3,9 @@
 import { useScroll } from 'framer-motion';
 
 import Box from '@mui/system/Box';
-import { useTheme } from '@mui/material/styles';
 import Container from '@mui/material/Container';
 import Grid from '@mui/material/Unstable_Grid2';
 import Typography from '@mui/material/Typography';
-
-import { useMockedUser } from 'src/hooks/use-mocked-user';
 
 import MainLayout from 'src/layouts/main';
 
@@ -16,9 +13,9 @@ import ScrollProgress from 'src/components/scroll-progress';
 // ----------------------------------------------------------------------
 
 export default function OverviewEcommerceView() {
-  const { user } = useMockedUser();
+  // const { user } = useMockedUser();
   const { scrollYProgress } = useScroll();
-  const theme = useTheme();
+  // const theme = useTheme();
 
   return (
     <MainLayout>

@@ -91,7 +91,7 @@ export default function PurchaseNewEditForm() {
       // reset();
       loadingSend.onFalse();
 
-      const response = await axios.post(`${HOST_API}/trades`, data);
+      await axios.post(`${HOST_API}/trades`, data);
       router.push(paths.purchase);
       console.info('DATA', JSON.stringify(data, null, 2));
     } catch (error) {

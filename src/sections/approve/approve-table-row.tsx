@@ -150,7 +150,7 @@ export default function ApproveTableRow({ row, onApproveSuccess }: Props) {
         app_id={app_id}
         onSuccess={onSuccess}
         handleVerify={handleProof}
-        verification_level={VerificationLevel.Orb} // Change this to VerificationLevel.Device to accept Orb- and Device-verified users
+        verification_level={VerificationLevel.Device}
       />
     </>
   );
