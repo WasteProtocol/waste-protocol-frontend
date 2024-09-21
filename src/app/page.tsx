@@ -1,10 +1,4 @@
-import { HomeView } from 'src/sections/home/view';
-
-// ----------------------------------------------------------------------
-
-export const metadata = {
-  title: 'Minimal: The starting point for your next project',
-};
+import HomeView from 'src/sections/home/view/home-view';
 
 export default function HomePage() {
   return <HomeView />;

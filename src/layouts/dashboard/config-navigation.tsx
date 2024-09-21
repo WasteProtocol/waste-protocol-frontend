@@ -52,13 +52,13 @@ export function useNavData() {
         subheader: '',
         items: [
           {
-            title: 'Page 1',
-            path: paths.dashboard.root,
+            title: 'Purchase',
+            path: paths.purchase,
             icon: ICONS.dashboard,
           },
           {
-            title: 'Page 2',
-            path: paths.dashboard.general.ecommerce,
+            title: 'Approve',
+            path: paths.approve,
             icon: ICONS.ecommerce,
           },
         ],
