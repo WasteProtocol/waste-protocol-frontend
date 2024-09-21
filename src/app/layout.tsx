@@ -6,6 +6,7 @@ import 'src/locales/i18n';
 
 // ----------------------------------------------------------------------
 
+import { GoogleAnalytics } from '@next/third-parties/google';
 import { headers } from 'next/headers';
 import ThemeProvider from 'src/theme';
 import { primaryFont } from 'src/theme/typography';
@@ -58,9 +59,11 @@ const WalletProvider = ({ children }: PropsWithChildren) => {
 };
 
 export default function RootLayout({ children }: Props) {
+  const gaId = process.env.NEXT_PUBLIC_GA_ID;
   return (
     <html lang="en" className={primaryFont.className}>
       <body>
+        {!!gaId && <GoogleAnalytics gaId={gaId} />}
         <WalletProvider>
           <AuthProvider>
             <LocalizationProvider>
