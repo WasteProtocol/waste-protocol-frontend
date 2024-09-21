@@ -44,7 +44,7 @@ const Logo = forwardRef<HTMLDivElement, LogoProps>(
         }}
         {...other}
       >
-        <img src="logo/waste-logo.png" alt="logo" />
+        <img src="../logo/waste-logo.png" alt="logo" />
       </Box>
     );
 

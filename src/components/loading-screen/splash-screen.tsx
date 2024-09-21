@@ -4,8 +4,6 @@ import { useState, useEffect } from 'react';
 import { alpha } from '@mui/material/styles';
 import Box, { BoxProps } from '@mui/material/Box';
 
-import Logo from '../logo';
-
 // ----------------------------------------------------------------------
 
 export default function SplashScreen({ sx, ...other }: BoxProps) {
@@ -48,9 +46,7 @@ export default function SplashScreen({ sx, ...other }: BoxProps) {
             repeatDelay: 1,
             repeat: Infinity,
           }}
-        >
-          <Logo disabledLink sx={{ width: 64, height: 64 }} />
-        </m.div>
+        />
 
         <Box
           component={m.div}
