@@ -20,6 +20,8 @@ export default function OverviewEcommerceView() {
   // const { user } = useMockedUser();
   const { scrollYProgress } = useScroll();
 
+  const chartBgColor = '#fdfdfd'; // FDF8FF , F5FCFF, FFFDF2
+
   return (
     <MainLayout>
       <ScrollProgress scrollYProgress={scrollYProgress} />
@@ -42,15 +44,48 @@ export default function OverviewEcommerceView() {
           </Grid>
 
           <Grid xs={12} md={4}>
-            <Box sx={{ pt: 16 }}>
-              <img src="assets/hero/glob.png" alt="glob" />
+            <Box sx={{ pt: 16, animation: 'float 3s ease-in-out infinite' }}>
+              <img src="assets/hero/glob.png" alt="glob" style={{ width: '100%' }} />
             </Box>
+          </Grid>
+        </Grid>
+
+        <Grid container spacing={3} sx={{ mt: 6 }}>
+          <Typography variant="h2" sx={{ pl: 1 }}>
+            Our stats
+          </Typography>
+        </Grid>
+
+        <Grid container spacing={3} sx={{ mt: 2 }}>
+          <Grid xs={4} md={4} lg={4}>
+            <EcommerceWidgetSummary
+              title="Product Sold"
+              total={765}
+              sx={{ backgroundColor: chartBgColor }}
+            />
+          </Grid>
+
+          <Grid xs={4}>
+            <EcommerceWidgetSummary
+              title="Total Balance"
+              total={18765}
+              sx={{ backgroundColor: chartBgColor }}
+            />
+          </Grid>
+
+          <Grid xs={4}>
+            <EcommerceWidgetSummary
+              title="Sales Profit"
+              total={4876}
+              sx={{ backgroundColor: chartBgColor }}
+            />
           </Grid>
         </Grid>
 
         <Grid container spacing={3} sx={{ mt: 6 }}>
           <Grid xs={12} md={6} lg={4}>
             <AppCurrentDownload
+              sx={{ backgroundColor: chartBgColor }}
               title="Amount of waste collected"
               chart={{
                 series: [
@@ -65,6 +100,7 @@ export default function OverviewEcommerceView() {
 
           <Grid xs={12} md={6} lg={8}>
             <EcommerceYearlySales
+              sx={{ backgroundColor: chartBgColor }}
               title="Monthly classification"
               subheader=""
               chart={{
@@ -99,6 +135,7 @@ export default function OverviewEcommerceView() {
 
           <Grid xs={12} md={6} lg={4}>
             <AppCurrentDownload
+              sx={{ backgroundColor: chartBgColor }}
               title="Separated by type"
               chart={{
                 series: [
@@ -109,20 +146,6 @@ export default function OverviewEcommerceView() {
                 ],
               }}
             />
-          </Grid>
-
-          <Grid xs={12} md={6} lg={4}>
-            <Grid xs={12}>
-              <EcommerceWidgetSummary title="Product Sold" total={765} />
-            </Grid>
-
-            <Grid xs={12} sx={{ mt: 2 }}>
-              <EcommerceWidgetSummary title="Total Balance" total={18765} />
-            </Grid>
-
-            <Grid xs={12} sx={{ mt: 2 }}>
-              <EcommerceWidgetSummary title="Sales Profit" total={4876} />
-            </Grid>
           </Grid>
         </Grid>
       </Container>
