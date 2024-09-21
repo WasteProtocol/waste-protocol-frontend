@@ -1,4 +1,5 @@
 import Box from '@mui/material/Box';
+import { useTheme } from '@mui/material/styles';
 
 import { usePathname } from 'src/routes/hooks';
 
@@ -13,7 +14,7 @@ type Props = {
 
 export default function MainLayout({ children }: Props) {
   const pathname = usePathname();
-
+  const theme = useTheme();
   const homePage = pathname === '/';
 
   return (
@@ -24,6 +25,7 @@ export default function MainLayout({ children }: Props) {
         component="main"
         sx={{
           flexGrow: 1,
+          backgroundColor: theme.palette.primary.light,
           ...(!homePage && {
             pt: { xs: 8, md: 10 },
           }),
