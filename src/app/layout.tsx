@@ -32,9 +32,8 @@ export const viewport = {
 };
 
 export const metadata = {
-  title: 'Minimal UI Kit',
-  description:
-    'The starting point for your next project with Minimal UI Kit, built on the newest version of Material-UI ©, ready to be customized to your style',
+  title: 'Waste Protocol',
+  description: 'Welcome to the Waste Protocol Customer Journey!',
   keywords: 'react,material,kit,application,dashboard,admin,template',
   manifest: '/manifest.json',
   icons: [

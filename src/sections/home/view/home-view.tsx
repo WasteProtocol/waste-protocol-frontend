@@ -1,13 +1,17 @@
 'use client';
 
 import { useScroll } from 'framer-motion';
+import { useState, useEffect } from 'react';
 
 import Box from '@mui/system/Box';
 import Container from '@mui/material/Container';
 import Grid from '@mui/material/Unstable_Grid2';
 import Typography from '@mui/material/Typography';
 
+import axios from 'src/utils/axios';
+
 import MainLayout from 'src/layouts/main';
+import { HOST_API } from 'src/config-global';
 
 import ScrollProgress from 'src/components/scroll-progress';
 
@@ -20,7 +24,20 @@ export default function OverviewEcommerceView() {
   // const { user } = useMockedUser();
   const { scrollYProgress } = useScroll();
 
+  const [stat, setStat] = useState({
+    hour: {},
+    total: {},
+  });
+
   const chartBgColor = '#fdfdfd'; // FDF8FF , F5FCFF, FFFDF2
+
+  useEffect(() => {
+    (async () => {
+      const { data: hourData } = await axios.get(`${HOST_API}/public/stat/hour`);
+      const { data: totalData } = await axios.get(`${HOST_API}/public/stat/total`);
+      setStat({ hour: hourData, total: totalData });
+    })();
+  }, []);
 
   return (
     <MainLayout>
