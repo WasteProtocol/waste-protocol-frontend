@@ -57,13 +57,16 @@ bash
 ├── public            # Static files (images, icons)
 ├── styles            # Tailwind CSS styles and global styling
 └── utils             # Helper functions and API integrations
-Dependencies
-Next.js: React framework for server-rendered applications.
-Tailwind CSS: Utility-first CSS framework.
-Ethers.js: Library to interact with Ethereum blockchain.
-MetaMask: Wallet integration for Ethereum.
-Chainlink: Oracles for real-time data.
-The Graph: Decentralized indexing protocol for querying blockchain data.
-Future Features
-NFT Integration: Tokenization of carbon credits as NFTs (future implementation).
-Improved Analytics: More insights and reporting features for carbon emissions and recycling impact.
+
+# Dependencies
+
+- Next.js: React framework for server-rendered applications.
+- Tailwind CSS: Utility-first CSS framework.
+- Ethers.js: Library to interact with Ethereum blockchain.
+- MetaMask: Wallet integration for Ethereum.
+- Chainlink: Oracles for real-time data.
+- The Graph: Decentralized indexing protocol for querying blockchain data.
+
+# Future Features
+- NFT Integration: Tokenization of carbon credits as NFTs (future implementation).
+- Improved Analytics: More insights and reporting features for carbon emissions and recycling impact.
