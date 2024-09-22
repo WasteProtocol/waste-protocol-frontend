@@ -8,7 +8,10 @@ import Container from '@mui/material/Container';
 import Grid from '@mui/material/Unstable_Grid2';
 import Typography from '@mui/material/Typography';
 
+import { useBoolean } from 'src/hooks/use-boolean';
+
 import axios from 'src/utils/axios';
+import { fDate } from 'src/utils/format-time';
 
 import MainLayout from 'src/layouts/main';
 import { HOST_API } from 'src/config-global';
@@ -24,9 +27,11 @@ export default function OverviewEcommerceView() {
   // const { user } = useMockedUser();
   const { scrollYProgress } = useScroll();
 
+  const init = useBoolean(true);
+
   const [stat, setStat] = useState({
-    hour: {},
-    total: {},
+    hour: [],
+    total: {} as any,
   });
 
   const chartBgColor = '#fdfdfd'; // FDF8FF , F5FCFF, FFFDF2
@@ -36,8 +41,12 @@ export default function OverviewEcommerceView() {
       const { data: hourData } = await axios.get(`${HOST_API}/public/stat/hour`);
       const { data: totalData } = await axios.get(`${HOST_API}/public/stat/total`);
       setStat({ hour: hourData, total: totalData });
+      init.onFalse();
     })();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  if (init.value) return null;
 
   return (
     <MainLayout>
@@ -77,7 +86,7 @@ export default function OverviewEcommerceView() {
           <Grid xs={4} md={4} lg={4}>
             <EcommerceWidgetSummary
               title="Product Sold"
-              total={765}
+              total={stat.total?.carbonEmissionCount}
               sx={{ backgroundColor: chartBgColor }}
             />
           </Grid>
@@ -85,7 +94,7 @@ export default function OverviewEcommerceView() {
           <Grid xs={4}>
             <EcommerceWidgetSummary
               title="Total Balance"
-              total={18765}
+              total={stat.total?.tradeCount}
               sx={{ backgroundColor: chartBgColor }}
             />
           </Grid>
@@ -93,7 +102,7 @@ export default function OverviewEcommerceView() {
           <Grid xs={4}>
             <EcommerceWidgetSummary
               title="Sales Profit"
-              total={4876}
+              total={+stat.total.usdcCount / 10e18}
               sx={{ backgroundColor: chartBgColor }}
             />
           </Grid>
@@ -121,27 +130,58 @@ export default function OverviewEcommerceView() {
               title="Monthly classification"
               subheader=""
               chart={{
-                categories: [
-                  'Jan',
-                  'Feb',
-                  'Mar',
-                  'Apr',
-                  'May',
-                  'Jun',
-                  'Jul',
-                  'Aug',
-                  'Sep',
-                  'Oct',
-                  'Nov',
-                  'Dec',
-                ],
+                categories: stat.hour.map((item: any) => fDate(item.timestamp)),
                 series: [
                   {
                     year: '2019',
                     data: [
                       {
-                        name: 'Kg.',
-                        data: [10, 41, 35, 51, 49, 62, 69, 91, 148, 35, 51, 49],
+                        name: 'Carbon Emission',
+                        data: stat.hour.map((item: any) => item.carbonEmissionCount),
+                      },
+                    ],
+                  },
+                ],
+              }}
+            />
+          </Grid>
+
+          <Grid xs={12} md={6} lg={8}>
+            <EcommerceYearlySales
+              sx={{ backgroundColor: chartBgColor }}
+              title="Monthly classification"
+              subheader=""
+              chart={{
+                categories: stat.hour.map((item: any) => fDate(item.timestamp)),
+                series: [
+                  {
+                    year: '2019',
+                    data: [
+                      {
+                        name: 'Trade',
+                        data: stat.hour.map((item: any) => item.tradeCount),
+                      },
+                    ],
+                  },
+                ],
+              }}
+            />
+          </Grid>
+
+          <Grid xs={12} md={6} lg={8}>
+            <EcommerceYearlySales
+              sx={{ backgroundColor: chartBgColor }}
+              title="Monthly classification"
+              subheader=""
+              chart={{
+                categories: stat.hour.map((item: any) => fDate(item.timestamp)),
+                series: [
+                  {
+                    year: '2019',
+                    data: [
+                      {
+                        name: 'USDC',
+                        data: stat.hour.map((item: any) => item.usdcCount / 10e18),
                       },
                     ],
                   },
