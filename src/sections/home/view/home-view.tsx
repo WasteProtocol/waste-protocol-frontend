@@ -85,7 +85,7 @@ export default function OverviewEcommerceView() {
         <Grid container spacing={3} sx={{ mt: 2 }}>
           <Grid xs={4} md={4} lg={4}>
             <EcommerceWidgetSummary
-              title="Product Sold"
+              title="Carbon Emission Collected (gCO2e)"
               total={stat.total?.carbonEmissionCount}
               sx={{ backgroundColor: chartBgColor }}
             />
@@ -93,7 +93,7 @@ export default function OverviewEcommerceView() {
 
           <Grid xs={4}>
             <EcommerceWidgetSummary
-              title="Total Balance"
+              title="Total Trade"
               total={stat.total?.tradeCount}
               sx={{ backgroundColor: chartBgColor }}
             />
@@ -101,7 +101,7 @@ export default function OverviewEcommerceView() {
 
           <Grid xs={4}>
             <EcommerceWidgetSummary
-              title="Sales Profit"
+              title="USDC paid to community"
               total={+stat.total.usdcCount / 10e18}
               sx={{ backgroundColor: chartBgColor }}
             />
@@ -109,28 +109,13 @@ export default function OverviewEcommerceView() {
         </Grid>
 
         <Grid container spacing={3} sx={{ mt: 6 }}>
-          <Grid xs={12} md={6} lg={4}>
-            <AppCurrentDownload
-              sx={{ backgroundColor: chartBgColor }}
-              title="Amount of waste collected"
-              chart={{
-                series: [
-                  { label: 'Paper', value: 12244 },
-                  { label: 'Paper', value: 53345 },
-                  { label: 'Paper', value: 44313 },
-                  { label: 'Paper', value: 78343 },
-                ],
-              }}
-            />
-          </Grid>
-
-          <Grid xs={12} md={6} lg={8}>
+          <Grid xs={12} md={6} lg={6}>
             <EcommerceYearlySales
               sx={{ backgroundColor: chartBgColor }}
-              title="Monthly classification"
+              title="Carbon Emission"
               subheader=""
               chart={{
-                categories: stat.hour.map((item: any) => fDate(item.timestamp)),
+                categories: stat.hour.map((item: any) => fDate(item.timestamp * 1000, 'HH:mm')),
                 series: [
                   {
                     year: '2019',
@@ -146,13 +131,13 @@ export default function OverviewEcommerceView() {
             />
           </Grid>
 
-          <Grid xs={12} md={6} lg={8}>
+          <Grid xs={12} md={6} lg={6}>
             <EcommerceYearlySales
               sx={{ backgroundColor: chartBgColor }}
-              title="Monthly classification"
+              title="Trading Count"
               subheader=""
               chart={{
-                categories: stat.hour.map((item: any) => fDate(item.timestamp)),
+                categories: stat.hour.map((item: any) => fDate(item.timestamp * 1000, 'HH:mm')),
                 series: [
                   {
                     year: '2019',
@@ -171,10 +156,10 @@ export default function OverviewEcommerceView() {
           <Grid xs={12} md={6} lg={8}>
             <EcommerceYearlySales
               sx={{ backgroundColor: chartBgColor }}
-              title="Monthly classification"
+              title="USDC Paid to Community"
               subheader=""
               chart={{
-                categories: stat.hour.map((item: any) => fDate(item.timestamp)),
+                categories: stat.hour.map((item: any) => fDate(item.timestamp * 1000, 'HH:mm')),
                 series: [
                   {
                     year: '2019',
